@@ -1,11 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { createClient } from 'redis';
+import { createClient, RedisClientType } from 'redis';
 import { nanoid } from 'nanoid';
+
+
 
 @Injectable()
 export class CutterUrlService {
-  private redisClient;
-
+  private redisClient: RedisClientType;
+  TIME_TO_LIVE_SECONDS = 60 * 60; // 1 Hora em segundos
   constructor() {
     this.redisClient = createClient({
       url: process.env.REDIS_URL,
@@ -20,7 +22,12 @@ export class CutterUrlService {
 
   async cutterUrl(rawUrl: string): Promise<{ shortUrl: string }> {
     const shortUrl = nanoid(9);
-    await this.redisClient.set(shortUrl, rawUrl);
+    await this.redisClient.set(shortUrl, rawUrl, {
+      expiration: {
+        type: 'EX',
+        value: this.TIME_TO_LIVE_SECONDS,
+      },
+    });
 
     const baseUrl = process.env.BASE_URL;
     return { shortUrl: `${baseUrl}/cutter-url/${shortUrl}` };
