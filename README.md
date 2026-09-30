@@ -105,7 +105,7 @@ URL inválida ou sem `http://`/`https://` retorna `400 Bad Request`.
 
 - [x] Encurtar e redirecionar URLs com Redis
 - [x] Validação da URL e tratamento da queda do Redis
-- [ ] Testes unitários e e2e do fluxo completo
+- [x] Testes unitários e e2e do fluxo completo
 - [ ] Expiração dos links (TTL do Redis)
 - [ ] Contador de cliques
 - [ ] Rate limiting
